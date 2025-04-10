@@ -3,7 +3,7 @@ import Logo from "../assets/logo-removebg-preview 1.svg";
 
 export default function Navbar() {
   return (
-    <nav className="flex w-full h-25 px-16 py-10 mt-2">
+    <nav className="flex w-full h-25 md:px-16 px-10 py-10 mt-2">
       <div className="my-auto justify-between flex w-screen">
         <img src={Logo} alt="" className="w-16 h-16" />
         <div className="space-x-10 my-auto md:flex hidden">

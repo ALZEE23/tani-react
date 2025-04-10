@@ -1,5 +1,5 @@
 // src/App.jsx
-import AppRoutes from "./component/AppRoutes";
+import AppRoutes from "./config/AppRoutes";
 import Navbar from "./component/Navbar";
 
 function App() {
