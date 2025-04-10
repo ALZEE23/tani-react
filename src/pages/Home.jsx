@@ -12,7 +12,7 @@ export default function Home() {
               Artikel Pertanian, Solusi untuk Masa Depan
             </h1>
           </div>
-          <div className="relative w-full md:h-[90vh] flex flex-col">
+          <div className="relative w-full md:h-[90vh] flex flex-col ">
             <h1 className="self-center md:text-2xl md:m-0 mx-10 text-lg text-center">
               Temukan berbagai informasi mengenai pertanian dalam
               artikel-artikel yang tersedia!
@@ -20,18 +20,18 @@ export default function Home() {
             <img
               src={HeaderImage}
               alt=""
-              className="scale-125 absolute bottom-40 w-full md:visible invisible"
+              className="scale-125 absolute bottom-40 w-full md:visible invisible border-none"
             />
           </div>
         </div>
       </section>
 
-      <section id="about" className="py-20 md:mt-0 mt-40">
+      <section id="about" className="py-8 md:mt-0 mt-40">
         <div className="flex flex-col md:mx-[137px] m-10">
           <img src={Logo} alt="" className="w-20 h-20" />
 
           <div className="flex h-screen w-full">
-            <div className="mt-14 md:space-y-20 md:w-[60%] h-[100%] space-y-10">
+            <div className="mt-14 md:space-y-10 md:w-[60%] h-[100%] space-y-10">
               <h1 className="md:text-6xl text-4xl md:w-[90%] font-semibold">
                 TUMBUHIN Menumbuhkan Pengetahuan Pertanian
               </h1>

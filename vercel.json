@@ -1,0 +1,24 @@
+{
+  "routes": [
+    {
+      "src": "/",
+      "dest": "/"
+    },
+    {
+      "src": "/blog",
+      "dest": "/"
+    },
+    {
+      "src": "/login",
+      "dest": "/"
+    },
+    {
+      "src": "/upload",
+      "dest": "/"
+    },
+    {
+        "src": "/bookmarks",
+      "dest": "/"
+    }
+  ]
+}
