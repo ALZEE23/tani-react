@@ -1,11 +1,15 @@
 export default function Blog() {
   const blogPosts = [
     {
+      id: 1,
       title: "Panduan Dasar Bertanam Hidroponik",
       date: "10 Desember 2024",
       content: "Lorem ipsum dolor sit amet consectetur adipisicing elit...",
       author: "Penulis",
     },
+    {},
+    {},
+    {},
 
     // Add more blog posts as needed
   ];
@@ -15,7 +19,7 @@ export default function Blog() {
       {blogPosts.map((post, index) => (
         <div
           key={index}
-          className="w-full md:w-[calc(50%-2rem)] lg:w-[calc(33.333%-2rem)] h-[28rem] bg-[#FFFFFF] rounded-xl p-3 space-y-2"
+          className="w-full md:w-[calc(50%-2rem)] mx-10 md:mx-0 lg:w-[calc(33.333%-2rem)] h-[28rem] bg-[#FFFFFF] rounded-xl p-3 space-y-2"
         >
           <div className="bg-slate-300 w-full h-[45%] rounded-lg relative">
             <div className="h-10 w-9 bg-white rounded-md absolute bottom-3 right-4"></div>

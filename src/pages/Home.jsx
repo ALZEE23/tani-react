@@ -7,7 +7,7 @@ export default function Home() {
     <div>
       <section>
         <div className="flex flex-col mt-14">
-          <div className="flex mx-auto h-72">
+          <div className="flex mx-auto h-72 z-10 bg-[#F1E9E9]">
             <h1 className="self-center md:text-8xl text-6xl text-center font-semibold bg-gradient-to-r from-[#1C2F11] to-[#466535] bg-clip-text text-transparent md:m-40 m-10">
               Artikel Pertanian, Solusi untuk Masa Depan
             </h1>
@@ -20,7 +20,7 @@ export default function Home() {
             <img
               src={HeaderImage}
               alt=""
-              className="scale-125 absolute md:bottom-40 md:-top-32 top-28 w-full border-none -z-1"
+              className="scale-125 absolute md:bottom-40 md:-top-32 top-28 w-full border-none "
             />
           </div>
         </div>

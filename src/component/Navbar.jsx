@@ -1,6 +1,7 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Logo from "../assets/logo-removebg-preview 1.svg";
+import { FaBars } from "react-icons/fa6";
 
 export default function Navbar() {
   const location = useLocation();
@@ -54,12 +55,20 @@ export default function Navbar() {
             Blog
           </Link>
         </div>
-        <div className="my-auto space-x-5">
+        <div className="my-auto space-x-5 md:flex hidden">
           <Link
             to="/login"
-            className="text-lg font-semibold bg-[#4C563C] text-[#FFFFFF] py-3 px-7 rounded-[5px]"
+            className="text-lg font-semibold bg-[#4C563C] text-[#FFFFFF] py-3 px-7 rounded-[5px] "
           >
             Get Started
+          </Link>
+        </div>
+        <div className="my-auto space-x-5 md:hidden flex">
+          <Link
+            to="/login"
+            className="text-lg font-semibold bg-[#4C563C] text-[#FFFFFF] py-3 px-7 rounded-[5px] "
+          >
+            <FaBars></FaBars>
           </Link>
         </div>
       </div>
