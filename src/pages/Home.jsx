@@ -8,7 +8,7 @@ export default function Home() {
       <section>
         <div className="flex flex-col mt-14">
           <div className="flex mx-auto h-72">
-            <h1 className="self-center md:text-8xl text-6xl text-center font-semibold bg-gradient-to-r from-[#075D07] via-[#5A8A42] to-[#8AC310] bg-clip-text text-transparent md:m-40 m-10">
+            <h1 className="self-center md:text-8xl text-6xl text-center font-semibold bg-gradient-to-r from-[#1C2F11] to-[#466535] bg-clip-text text-transparent md:m-40 m-10">
               Artikel Pertanian, Solusi untuk Masa Depan
             </h1>
           </div>
@@ -20,13 +20,13 @@ export default function Home() {
             <img
               src={HeaderImage}
               alt=""
-              className="scale-125 absolute bottom-40 w-full md:visible invisible border-none"
+              className="scale-125 absolute md:bottom-40 md:-top-32 top-28 w-full border-none -z-1"
             />
           </div>
         </div>
       </section>
 
-      <section id="about" className="py-8 md:mt-0 mt-40">
+      <section id="about" className="md:py-8 py-20 md:mt-0 mt-72">
         <div className="flex flex-col md:mx-[137px] m-10">
           <img src={Logo} alt="" className="w-20 h-20" />
 
@@ -51,7 +51,11 @@ export default function Home() {
               </div>
             </div>
             <div className="h-full w-[40%] flex pt-10">
-              <img src={AboutImage} alt="" className="w-[390px] h-[585px] md:flex hidden" />
+              <img
+                src={AboutImage}
+                alt=""
+                className="w-[390px] h-[585px] md:flex hidden"
+              />
             </div>
           </div>
         </div>
