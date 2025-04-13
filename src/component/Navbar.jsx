@@ -7,10 +7,11 @@ export default function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
   const [isIndex, setIsIndex] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
     setIsIndex(location.pathname === "/");
-    
+
     if (location.hash === "#about") {
       setTimeout(() => {
         const element = document.getElementById("about");
@@ -64,13 +65,78 @@ export default function Navbar() {
           </Link>
         </div>
         <div className="my-auto space-x-5 md:hidden flex">
-          <Link
-            to="/login"
-            className="text-lg font-semibold bg-[#4C563C] text-[#FFFFFF] py-3 px-7 rounded-[5px] "
+          <button
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            className="text-lg font-semibold bg-[#4C563C] text-[#FFFFFF] py-3 px-7 rounded-[5px] z-20"
           >
-            <FaBars></FaBars>
-          </Link>
+            <FaBars />
+          </button>
         </div>
+
+       
+        <div
+          className={`fixed top-0 right-0 h-screen w-64 z-30 bg-[#D8DAD5] transform transition-transform duration-300 ease-in-out ${
+            isSidebarOpen ? "translate-x-0" : "translate-x-full"
+          } md:hidden`}
+        >
+          <div className="flex flex-col items-center pt-14 space-y-8">
+            <button
+              onClick={() => setIsSidebarOpen(false)}
+              className="text-lg font-semibold bg-[#4C563C] text-[#FFFFFF] py-3 px-7 rounded-[5px]"
+            >
+              <FaBars />
+            </button>
+            <Link
+              to="/"
+              className="font-semibold text-lg"
+              onClick={() => setIsSidebarOpen(false)}
+            >
+              Home
+            </Link>
+            {isIndex ? (
+              <a
+                href="#about"
+                className="font-semibold text-lg"
+                onClick={() => setIsSidebarOpen(false)}
+              >
+                About
+              </a>
+            ) : (
+              <Link
+                to="/"
+                className="font-semibold text-lg"
+                onClick={(e) => {
+                  handleAboutClick(e);
+                  setIsSidebarOpen(false);
+                }}
+              >
+                About
+              </Link>
+            )}
+            <Link
+              to="/blog"
+              className="font-semibold text-lg"
+              onClick={() => setIsSidebarOpen(false)}
+            >
+              Blog
+            </Link>
+            <Link
+              to="/login"
+              className="text-lg font-semibold bg-[#4C563C] text-[#FFFFFF] py-3 px-7 rounded-[5px]"
+              onClick={() => setIsSidebarOpen(false)}
+            >
+              Get Started
+            </Link>
+          </div>
+        </div>
+
+        
+        {isSidebarOpen && (
+          <div
+            className="fixed inset-0 bg-black bg-opacity-50 md:hidden z-20"
+            onClick={() => setIsSidebarOpen(false)}
+          />
+        )}
       </div>
     </nav>
   );
