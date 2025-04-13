@@ -8,7 +8,7 @@ function App() {
   const location = useLocation();
   const [isNavbar, setIsNavbar] = useState(true);
   useEffect(() => {
-    if (location.pathname === "/login") {
+    if (location.pathname === "/login" || location.pathname === "/register") {
       setIsNavbar(false);   
     }
   },[location]);
