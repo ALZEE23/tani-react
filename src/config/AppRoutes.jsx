@@ -9,6 +9,7 @@ import MyBlog from "../pages/MyBlog";
 import BlogDetail from "../pages/BlogDetail";
 import Bookmark from "../pages/Bookmark";
 import FormBlog from "../pages/FormBlog";
+import Profile from "../pages/Profile";
 
 const AppRoutes = () => {
   return (
@@ -26,6 +27,7 @@ const AppRoutes = () => {
         <Route path="/bookmark" element={<Bookmark />} />
         <Route path="/formblog" element={<FormBlog />} />
         <Route path="/formblog/:id" element={<FormBlog />} />
+        <Route path="/profile" element={<Profile />} />
       </Route>
     </Routes>
   );

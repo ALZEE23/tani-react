@@ -13,11 +13,31 @@
       "dest": "/"
     },
     {
-      "src": "/upload",
+      "src": "/formblog",
       "dest": "/"
     },
     {
-        "src": "/bookmarks",
+      "src": "/formblog/:id",
+      "dest": "/"
+    },
+    {
+      "src": "/bookmark",
+      "dest": "/"
+    },
+    {
+      "src":"/register",
+      "dest": "/"
+    },
+    {
+      "src":"/blogdetail/:id",
+      "dest": "/"
+    },
+    {
+      "src":"/myblog",
+      "dest": "/"
+    },
+    {
+      "src":"/profile",
       "dest": "/"
     }
   ]

@@ -45,7 +45,7 @@ const SortableBlock = ({ block, index, ...props }) => {
     <div ref={setNodeRef} style={style} {...props}>
       <div className="relative group mb-6">
         <div className="flex items-start gap-4 group">
-          {/* Drag Handle */}
+          
           {block.type !== "title" && (
             <button
               className="mt-3 cursor-grab opacity-0 group-hover:opacity-100 transition-opacity"
@@ -111,12 +111,12 @@ export default function FormBlog() {
     );
   };
 
-  const handleKeyPress = (e, index) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      handleAddBlock(index, "text");
-    }
-  };
+//   const handleKeyPress = (e, index) => {
+//     if (e.key === "Enter") {
+//       e.preventDefault();
+//       handleAddBlock(index, "text");
+//     }
+//   };
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -258,7 +258,7 @@ export default function FormBlog() {
           {blocks.map((block, index) => (
             <SortableBlock key={block.id} block={block} index={index}>
               <div className="flex items-start gap-4 group flex-1">
-                {/* Plus Button with Dropdown */}
+                
                 <div className="relative">
                   <button
                     className="mt-3 p-2 rounded-full hover:bg-gray-100 opacity-0 group-hover:opacity-100 transition-opacity"
@@ -269,7 +269,7 @@ export default function FormBlog() {
                     <FaPlus className="text-gray-400" />
                   </button>
 
-                  {/* Dropdown Menu */}
+                  
                   {showMenu === block.id && (
                     <div className="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10">
                       <div className="py-1">
