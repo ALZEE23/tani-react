@@ -166,7 +166,7 @@ export default function FormBlog() {
           <input
             type="text"
             placeholder="Title"
-            className="w-full text-4xl font-bold outline-none border-none bg-transparent placeholder-gray-400"
+            className="w-full text-4xl font-bold outline-none border-none bg-transparent placeholder-gray-400 pr-2"
             value={block.content}
             onChange={(e) => handleContentChange(block.id, e.target.value)}
           />
@@ -176,7 +176,7 @@ export default function FormBlog() {
           <input
             type="text"
             placeholder="Header"
-            className="w-full text-2xl font-semibold outline-none border-none bg-transparent placeholder-gray-400"
+            className="w-full text-2xl font-semibold outline-none border-none bg-transparent placeholder-gray-400 pr-2"
             value={block.content}
             onChange={(e) => handleContentChange(block.id, e.target.value)}
           />
@@ -186,7 +186,7 @@ export default function FormBlog() {
           <input
             type="text"
             placeholder="Subheader"
-            className="w-full text-xl font-medium outline-none border-none bg-transparent placeholder-gray-400"
+            className="w-full text-xl font-medium outline-none border-none bg-transparent placeholder-gray-400 pr-2"
             value={block.content}
             onChange={(e) => handleContentChange(block.id, e.target.value)}
           />
@@ -382,12 +382,13 @@ export default function FormBlog() {
                   )}
                 </div>
 
-                <div className="flex-1 relative">
+                <div className="flex-1 relative pr-12">
+                  {" "}
+                  {/* Added pr-12 for minus button space */}
                   {renderBlock(block)}
-
                   {block.type !== "title" && block.content && (
                     <button
-                      className="absolute -right-10 top-3 p-2 rounded-full hover:bg-gray-100 opacity-0 group-hover:opacity-100 transition-opacity"
+                      className="absolute -right-2 md:-right-10 top-3 p-2 rounded-full hover:bg-gray-100 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity"
                       onClick={() => handleRemoveBlock(block.id)}
                     >
                       <FaMinus className="text-gray-400" />
