@@ -29,7 +29,7 @@
       "dest": "/"
     },
     {
-      "src":"/blogdetail/:id",
+      "src":"/blog/:id",
       "dest": "/"
     },
     {
