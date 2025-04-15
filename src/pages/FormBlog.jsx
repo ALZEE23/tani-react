@@ -26,7 +26,7 @@ import {
 import { createBlog } from "../config/Api";
 import { useNavigate } from "react-router-dom";
 
-// Update the SortableBlock drag handle
+
 const SortableBlock = ({ block, index, ...props }) => {
   const {
     attributes,
@@ -37,14 +37,14 @@ const SortableBlock = ({ block, index, ...props }) => {
     isDragging,
   } = useSortable({
     id: block.id,
-    disabled: block.type === "title", // Prevent title from being dragged
+    disabled: block.type === "title", 
   });
 
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.5 : 1,
-    touchAction: "none", // Important for mobile drag
+    touchAction: "none", 
   };
 
   return (
@@ -117,13 +117,13 @@ export default function FormBlog() {
     );
   };
 
-  // Update the sensors configuration
+  
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 8, // Distance in pixels before drag starts
-        delay: 100, // Reduced delay for better responsiveness
-        tolerance: 10, // Increased tolerance for touch
+        distance: 8, 
+        delay: 100, 
+        tolerance: 10, 
       },
     }),
     useSensor(KeyboardSensor, {
@@ -284,9 +284,7 @@ export default function FormBlog() {
         throw new Error("No response data received");
       }
 
-      // if (!data.id) {
-      //   throw new Error("No blog ID in response");
-      // }
+
 
       navigate(`/blog`);
     } catch (error) {
@@ -327,9 +325,7 @@ export default function FormBlog() {
         throw new Error("No response data received");
       }
 
-      // if (!data.id) {
-      //   throw new Error("No blog ID in response");
-      // }
+
 
       navigate(`/blog`);
     } catch (error) {
@@ -384,7 +380,7 @@ export default function FormBlog() {
 
                 <div className="flex-1 relative pr-12">
                   {" "}
-                  {/* Added pr-12 for minus button space */}
+                  
                   {renderBlock(block)}
                   {block.type !== "title" && block.content && (
                     <button

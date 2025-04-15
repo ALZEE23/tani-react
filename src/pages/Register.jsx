@@ -29,19 +29,19 @@ export default function Register() {
     e.preventDefault();
     setError("");
 
-    // Validate password match
+
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match");
       return;
     }
 
-    // Validate password length
+    
     if (formData.password.length < 6) {
       setError("Password must be at least 6 characters long");
       return;
     }
 
-    // Validate email format
+    
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
       setError("Please enter a valid email address");

@@ -39,7 +39,7 @@ export const register = async (userData) => {
     return response;
   } catch (error) {
     if (error.response?.status === 400) {
-      // Handle specific error cases
+      
       const errorMessage = error.response.data?.error || "Registration failed";
       throw new Error(errorMessage);
     }
@@ -54,7 +54,7 @@ export const createBlog = (blogData) => {
   formData.append("title", blogData.title);
   formData.append("publish", blogData.publish || false);
 
-  // Handle content blocks
+  
   const contentBlocks = blogData.content.map((block, index) => ({
     type: block.type,
     content: block.content || null,
@@ -63,7 +63,7 @@ export const createBlog = (blogData) => {
   }));
   formData.append("content", JSON.stringify(contentBlocks));
 
-  // Handle image if exists
+  
   if (blogData.image) {
     formData.append("image", blogData.image);
   }

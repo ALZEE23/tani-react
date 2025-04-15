@@ -37,7 +37,7 @@ export default function BlogDetail() {
           <p className="text-gray-700 mb-4 leading-relaxed">{block.content}</p>
         );
       case "image":
-        // Only render image if it starts with data:
+        
         if (block.image_url?.startsWith("data:")) {
           return (
             <div className="my-4">
@@ -49,7 +49,7 @@ export default function BlogDetail() {
             </div>
           );
         }
-        // Return null for https:// URLs
+        
         return null;
       default:
         return null;

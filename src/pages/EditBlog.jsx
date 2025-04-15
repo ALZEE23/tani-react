@@ -107,7 +107,7 @@ export default function EditBlog() {
 
       console.log("Raw blog data:", blog);
 
-      // Transform blog data into blocks format
+      
       const transformedBlocks = [
         {
           id: 1,
@@ -116,7 +116,7 @@ export default function EditBlog() {
         },
       ];
 
-      // Handle content blocks if they exist
+     
       if (Array.isArray(blog.content)) {
         const contentBlocks = blog.content.map((block, index) => ({
           id: index + 2,
@@ -192,11 +192,11 @@ export default function EditBlog() {
       try {
         const reader = new FileReader();
         reader.onloadend = () => {
-          // Get the index where we want to add or update the image
+          
           const blockIndex = blocks.findIndex((block) => block.id === showMenu);
 
           if (blockIndex !== -1) {
-            // Insert new image block after the current block
+            
             const newBlock = {
               id: Math.max(...blocks.map((block) => block.id)) + 1,
               type: "image",

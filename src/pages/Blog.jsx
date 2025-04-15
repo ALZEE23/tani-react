@@ -34,16 +34,14 @@ export default function Blog() {
       const response = await API.get("/bookmarks", { timeout: 30000 });
       console.log("Bookmark response:", response.data);
 
-      // Extract blog_ids from bookmarks array
       const bookmarkedIds =
         response.data?.bookmarks?.map((bookmark) => bookmark.blog_id) || [];
 
-      // Remove any duplicate IDs
       const uniqueBookmarkedIds = [...new Set(bookmarkedIds)];
       setBookmarkedBlogs(uniqueBookmarkedIds);
     } catch (err) {
       console.error("Error fetching bookmarks:", err);
-      // Don't set bookmarks to empty array on error to prevent UI flicker
+
       if (err.response?.status !== 401) {
         setBookmarkedBlogs([]);
       }
@@ -51,10 +49,10 @@ export default function Blog() {
   };
 
   const handleBookmark = async (e, blogId) => {
-    e.stopPropagation(); // Prevent navigation when clicking bookmark
+    e.stopPropagation();
     try {
       if (bookmarkedBlogs.includes(blogId)) {
-        await deleteBookmark(blogId); // Changed from removeBookmark to deleteBookmark
+        await deleteBookmark(blogId);
         setBookmarkedBlogs((prev) => prev.filter((id) => id !== blogId));
       } else {
         await addBookmark(blogId);
@@ -89,7 +87,7 @@ export default function Blog() {
   }
 
   return (
-    <div className="flex flex-wrap justify-center mt-14 px-4 md:px-16 lg:px-32 w-full gap-8">
+    <div className="flex flex-wrap justify-center mt-14 mb-20 px-4 md:px-16 lg:px-32 w-full gap-8">
       {blogs.map((blog) => (
         <div
           key={blog.id}

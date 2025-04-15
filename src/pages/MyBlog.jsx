@@ -64,17 +64,17 @@ export default function MyBlog() {
   }, [blogs]);
 
   const handleBookmark = async (e, blogId) => {
-    e.stopPropagation(); // Prevent navigation when clicking bookmark
+    e.stopPropagation(); 
     try {
       if (bookmarkedBlogs.includes(blogId)) {
-        // Find the bookmark ID for this blog
+        
         const bookmark = await API.get("/bookmarks");
         const bookmarkData = bookmark.data.bookmarks.find(
           (b) => b.blog_id === blogId
         );
 
         if (bookmarkData) {
-          await deleteBookmark(bookmarkData.id); // Use bookmark.id instead of blog.id
+          await deleteBookmark(bookmarkData.id); 
           setBookmarkedBlogs((prev) => prev.filter((id) => id !== blogId));
           console.log("Bookmark deleted:", bookmarkData.id);
         }
@@ -94,7 +94,7 @@ export default function MyBlog() {
   };
 
   const handleDelete = async (e, blogId) => {
-    e.stopPropagation(); // Prevent navigation
+    e.stopPropagation(); 
     if (window.confirm("Are you sure you want to delete this blog?")) {
       try {
         await deleteBlog(blogId);
@@ -107,7 +107,7 @@ export default function MyBlog() {
   };
 
   const handleEdit = (e, blogId) => {
-    e.stopPropagation(); // Prevent navigation
+    e.stopPropagation(); 
     navigate(`/edit-blog/${blogId}`);
   };
 
@@ -126,7 +126,7 @@ export default function MyBlog() {
   }
 
   return (
-    <div className="flex flex-wrap justify-center mt-14 px-4 md:px-16 lg:px-32 w-full gap-8">
+    <div className="flex flex-wrap justify-center mt-14 mb-20 px-4 md:px-16 lg:px-32 w-full gap-8">
       {blogs.map((blog) => (
         <div
           key={blog.id}

@@ -30,11 +30,11 @@ export default function Navbar() {
       }, 100);
     }
 
-    // Check if user is logged in
+    
     const token = localStorage.getItem("token");
     setIsAuthenticated(!!token);
 
-    // Close dropdown when clicking outside
+    
     const handleClickOutside = (event) => {
       if (
         profileMenuRef.current &&
@@ -65,7 +65,7 @@ export default function Navbar() {
     navigate("/login");
   };
 
-  // Replace the Get Started button with this profile section
+  
   const renderAuthButton = () => {
     if (isAuthenticated) {
       return (
@@ -84,7 +84,7 @@ export default function Navbar() {
             />
           </button>
 
-          {/* Profile Dropdown */}
+         
           {showProfileMenu && (
             <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 z-50">
               <Link

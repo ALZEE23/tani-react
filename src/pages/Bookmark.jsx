@@ -23,16 +23,16 @@ export default function Bookmark() {
       const blogs = blogsResponse.data?.blogs || [];
       const bookmarkData = bookmarksResponse.data?.bookmarks || [];
 
-      // Create an array of objects containing both blog and bookmark data
+      
       const bookmarkedBlogs = bookmarkData
         .map((bookmark) => {
           const blog = blogs.find((blog) => blog.id === bookmark.blog_id);
           return {
             ...blog,
-            bookmarkId: bookmark.id, // Store the bookmark ID for deletion
+            bookmarkId: bookmark.id, 
           };
         })
-        .filter(Boolean); // Remove any undefined entries
+        .filter(Boolean); 
 
       setBookmarks(bookmarkedBlogs);
     } catch (err) {
@@ -44,7 +44,7 @@ export default function Bookmark() {
   };
 
   const handleRemoveBookmark = async (e, bookmarkId) => {
-    e.stopPropagation(); // Prevent navigation when clicking bookmark
+    e.stopPropagation(); 
     try {
       await deleteBookmark(bookmarkId);
       setBookmarks((prev) =>
@@ -77,7 +77,7 @@ export default function Bookmark() {
   }
 
   return (
-    <div className="flex flex-wrap justify-center mt-14 px-4 md:px-16 lg:px-32 w-full gap-8">
+    <div className="flex flex-wrap justify-center mt-14 mb-20 px-4 md:px-16 lg:px-32 w-full gap-8">
       {bookmarks.map((blog) => (
         <div
           key={blog.id}
