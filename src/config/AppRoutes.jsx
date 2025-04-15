@@ -9,25 +9,25 @@ import MyBlog from "../pages/MyBlog";
 import BlogDetail from "../pages/BlogDetail";
 import Bookmark from "../pages/Bookmark";
 import FormBlog from "../pages/FormBlog";
-import Profile from "../pages/Profile";
+
+import EditBlog from "../pages/EditBlog";
 
 const AppRoutes = () => {
   return (
     <Routes>
-      
       <Route path="/" element={<Home />} />
       <Route path="/blog" element={<Blog />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
-      <Route path="/blogdetail/:id" element={<BlogDetail />} />
+      <Route path="/blog/:id" element={<BlogDetail />} />
 
-      
       <Route element={<PrivateRoute />}>
         <Route path="/myblog" element={<MyBlog />} />
         <Route path="/bookmark" element={<Bookmark />} />
         <Route path="/formblog" element={<FormBlog />} />
         <Route path="/formblog/:id" element={<FormBlog />} />
-        <Route path="/profile" element={<Profile />} />
+        <Route path="/edit-blog/:id" element={<EditBlog />} />
+       
       </Route>
     </Routes>
   );

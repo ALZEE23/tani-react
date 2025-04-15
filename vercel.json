@@ -37,7 +37,7 @@
       "dest": "/"
     },
     {
-      "src":"/profile",
+      "src":"/edit-blog/:id",
       "dest": "/"
     }
   ]

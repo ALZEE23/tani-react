@@ -1,4 +1,5 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   DndContext,
   closestCenter,
@@ -23,8 +24,7 @@ import {
   FaAlignLeft,
   FaGripVertical,
 } from "react-icons/fa6";
-import { createBlog } from "../config/Api";
-import { useNavigate } from "react-router-dom";
+import API, { updateBlog } from "../config/Api";
 
 const SortableBlock = ({ block, index, ...props }) => {
   const {
@@ -55,7 +55,6 @@ const SortableBlock = ({ block, index, ...props }) => {
               <FaGripVertical className="text-gray-400" />
             </button>
           )}
-
           {props.children}
         </div>
       </div>
@@ -63,16 +62,15 @@ const SortableBlock = ({ block, index, ...props }) => {
   );
 };
 
-export default function FormBlog() {
+export default function EditBlog() {
+  const { id } = useParams();
   const navigate = useNavigate();
-  const [blocks, setBlocks] = useState([
-    { id: 1, type: "title", content: "" },
-    { id: 2, type: "text", content: "" },
-  ]);
+  const [blocks, setBlocks] = useState([]);
   const [showMenu, setShowMenu] = useState(null);
   const fileInputRef = useRef(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSavingDraft, setIsSavingDraft] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const blockTypes = [
     { type: "header", icon: <FaHeading />, label: "Header" },
@@ -85,34 +83,6 @@ export default function FormBlog() {
     { type: "image", icon: <FaImage />, label: "Image" },
   ];
 
-  const handleAddBlock = (index, type) => {
-    const newBlock = {
-      id: blocks.length + 1,
-      type: type,
-      content: "",
-    };
-    setBlocks([
-      ...blocks.slice(0, index + 1),
-      newBlock,
-      ...blocks.slice(index + 1),
-    ]);
-    setShowMenu(null);
-  };
-
-  const handleRemoveBlock = (id) => {
-    if (blocks.length > 2) {
-      setBlocks(blocks.filter((block) => block.id !== id));
-    }
-  };
-
-  const handleContentChange = (id, value) => {
-    setBlocks(
-      blocks.map((block) =>
-        block.id === id ? { ...block, content: value } : block
-      )
-    );
-  };
-
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
@@ -120,32 +90,133 @@ export default function FormBlog() {
     })
   );
 
+  useEffect(() => {
+    fetchBlogData();
+  }, [id]);
+
+  const fetchBlogData = async () => {
+    try {
+      console.log("Fetching blog with ID:", id);
+      const response = await API.get(`/blogs/${id}`);
+      console.log("API Response:", response);
+
+      const blog = response.data;
+      if (!blog) {
+        throw new Error("No blog data received");
+      }
+
+      console.log("Raw blog data:", blog);
+
+      // Transform blog data into blocks format
+      const transformedBlocks = [
+        {
+          id: 1,
+          type: "title",
+          content: blog.title || "",
+        },
+      ];
+
+      // Handle content blocks if they exist
+      if (Array.isArray(blog.content)) {
+        const contentBlocks = blog.content.map((block, index) => ({
+          id: index + 2,
+          type: block.type,
+          content:
+            block.type === "image"
+              ? block.image_url || block.imageUrl || ""
+              : block.content || "",
+          position: block.position || index + 1,
+        }));
+        transformedBlocks.push(...contentBlocks);
+      } else {
+        console.warn("Blog content is not an array:", blog.content);
+      }
+
+      console.log("Transformed blocks:", transformedBlocks);
+
+      if (transformedBlocks.length === 0) {
+        throw new Error("No blocks created from blog data");
+      }
+
+      setBlocks(transformedBlocks);
+      console.log("Blocks state updated:", transformedBlocks);
+    } catch (err) {
+      console.error("Error in fetchBlogData:", err);
+      setError(err.message || "Failed to fetch blog");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleContentChange = (id, newContent) => {
+    setBlocks((blocks) =>
+      blocks.map((block) =>
+        block.id === id ? { ...block, content: newContent } : block
+      )
+    );
+  };
+
+  const handleAddBlock = (index, type) => {
+    const newBlock = {
+      id: Math.max(...blocks.map((block) => block.id)) + 1,
+      type,
+      content: "",
+    };
+
+    const newBlocks = [...blocks];
+    newBlocks.splice(index + 1, 0, newBlock);
+    setBlocks(newBlocks);
+    setShowMenu(null);
+  };
+
+  const handleRemoveBlock = (id) => {
+    setBlocks((blocks) => blocks.filter((block) => block.id !== id));
+  };
+
   const handleDragEnd = (event) => {
     const { active, over } = event;
 
-    if (active.id !== over.id) {
+    if (active.id !== over?.id) {
       setBlocks((blocks) => {
         const oldIndex = blocks.findIndex((block) => block.id === active.id);
         const newIndex = blocks.findIndex((block) => block.id === over.id);
-
-        if (oldIndex === 0 || newIndex === 0) {
-          return blocks;
-        }
 
         return arrayMove(blocks, oldIndex, newIndex);
       });
     }
   };
 
-  const handleImageUpload = (e, blockId) => {
-    const file = e.target.files[0];
+  const handleImageUpload = async (event) => {
+    const file = event.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        handleContentChange(blockId, e.target.result);
-      };
-      reader.readAsDataURL(file);
+      try {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          // Get the index where we want to add or update the image
+          const blockIndex = blocks.findIndex((block) => block.id === showMenu);
+
+          if (blockIndex !== -1) {
+            // Insert new image block after the current block
+            const newBlock = {
+              id: Math.max(...blocks.map((block) => block.id)) + 1,
+              type: "image",
+              content: reader.result,
+            };
+
+            const newBlocks = [...blocks];
+            newBlocks.splice(blockIndex + 1, 0, newBlock);
+            setBlocks(newBlocks);
+          }
+
+          console.log("Image loaded:", reader.result.substring(0, 100) + "...");
+        };
+        reader.readAsDataURL(file);
+      } catch (error) {
+        console.error("Error processing image:", error);
+        alert("Failed to process image. Please try again.");
+      }
     }
+    setShowMenu(null);
   };
 
   const renderBlock = (block) => {
@@ -155,7 +226,7 @@ export default function FormBlog() {
           <input
             type="text"
             placeholder="Title"
-            className="w-full text-4xl font-bold outline-none border-none bg-transparent placeholder-gray-400"
+            className="w-full text-4xl font-bold outline-none bg-transparent placeholder-gray-400"
             value={block.content}
             onChange={(e) => handleContentChange(block.id, e.target.value)}
           />
@@ -165,7 +236,7 @@ export default function FormBlog() {
           <input
             type="text"
             placeholder="Header"
-            className="w-full text-2xl font-semibold outline-none border-none bg-transparent placeholder-gray-400"
+            className="w-full text-2xl font-semibold outline-none bg-transparent placeholder-gray-400"
             value={block.content}
             onChange={(e) => handleContentChange(block.id, e.target.value)}
           />
@@ -175,55 +246,38 @@ export default function FormBlog() {
           <input
             type="text"
             placeholder="Subheader"
-            className="w-full text-xl font-medium outline-none border-none bg-transparent placeholder-gray-400"
+            className="w-full text-xl font-medium outline-none bg-transparent placeholder-gray-400"
             value={block.content}
             onChange={(e) => handleContentChange(block.id, e.target.value)}
           />
         );
       case "image":
-        return (
-          <div className="w-full">
-            {block.content ? (
-              <div className="relative group">
-                <img
-                  src={block.content}
-                  alt=""
-                  className="max-w-full rounded-lg"
-                />
-                <button
-                  onClick={() => fileInputRef.current?.click()}
-                  className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity text-white"
-                >
-                  Change Image
-                </button>
-                <input
-                  type="file"
-                  ref={fileInputRef}
-                  className="hidden"
-                  accept="image/*"
-                  onChange={(e) => handleImageUpload(e, block.id)}
-                />
-              </div>
-            ) : (
-              <div className="relative">
-                <button
-                  onClick={() => fileInputRef.current?.click()}
-                  className="w-full p-8 border-2 border-dashed border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-                >
-                  <FaImage className="mx-auto text-gray-400 text-xl" />
-                  <span className="block mt-2 text-gray-500">
-                    Click to upload image
-                  </span>
-                </button>
-                <input
-                  type="file"
-                  ref={fileInputRef}
-                  className="hidden"
-                  accept="image/*"
-                  onChange={(e) => handleImageUpload(e, block.id)}
-                />
-              </div>
-            )}
+        return block.content ? (
+          <div className="relative w-full">
+            <img
+              src={block.content}
+              alt="Blog content"
+              className="w-full max-h-[500px] object-cover rounded-lg"
+              onError={(e) => {
+                console.error("Image failed to load:", block.content);
+                e.target.style.display = "none";
+              }}
+            />
+            <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                className="p-2 bg-white rounded-full shadow-md hover:bg-gray-100"
+              >
+                <FaImage className="text-gray-600" />
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div
+            onClick={() => fileInputRef.current?.click()}
+            className="w-full h-48 bg-gray-100 rounded-lg flex items-center justify-center cursor-pointer hover:bg-gray-200 transition-colors"
+          >
+            <FaImage className="text-gray-400 text-2xl" />
           </div>
         );
       default:
@@ -254,11 +308,10 @@ export default function FormBlog() {
           imageUrl: block.type === "image" ? block.content : null,
           position: index + 1,
         })),
-        publish: true,
       };
 
       const imageBlock = blocks.find(
-        (block) => block.type === "image" && block.content
+        (block) => block.type === "image" && block.content?.startsWith("data:")
       );
       if (imageBlock) {
         const base64Response = await fetch(imageBlock.content);
@@ -267,70 +320,42 @@ export default function FormBlog() {
         blogData.image = file;
       }
 
-      const { data } = await createBlog(blogData);
-
-      if (!data) {
-        throw new Error("No response data received");
-      }
-
-      // if (!data.id) {
-      //   throw new Error("No blog ID in response");
-      // }
-
-      navigate(`/blog`);
+      await updateBlog(id, blogData);
+      navigate(`/blog/${id}`);
     } catch (error) {
-      console.error("Failed to save blog:", error);
-      alert("Failed to save blog. Please try again.");
+      console.error("Failed to update blog:", error);
+      alert("Failed to update blog. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleDraft = async () => {
-    setIsSavingDraft(true);
-    try {
-      const blogData = {
-        title: blocks[0].content || "Untitled Draft",
-        content: blocks.slice(1).map((block, index) => ({
-          type: block.type,
-          content: block.type === "image" ? null : block.content,
-          imageUrl: block.type === "image" ? block.content : null,
-          position: index + 1,
-        })),
-        publish: false,
-      };
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-4 border-[#4C563C] border-t-transparent"></div>
+      </div>
+    );
+  }
 
-      const imageBlock = blocks.find(
-        (block) => block.type === "image" && block.content
-      );
-      if (imageBlock) {
-        const base64Response = await fetch(imageBlock.content);
-        const blob = await base64Response.blob();
-        const file = new File([blob], "image.jpg", { type: "image/jpeg" });
-        blogData.image = file;
-      }
-
-      const { data } = await createBlog(blogData);
-
-      if (!data) {
-        throw new Error("No response data received");
-      }
-
-      // if (!data.id) {
-      //   throw new Error("No blog ID in response");
-      // }
-
-      navigate(`/blog`);
-    } catch (error) {
-      console.error("Failed to save draft:", error);
-      alert("Failed to save draft. Please try again.");
-    } finally {
-      setIsSavingDraft(false);
-    }
-  };
+  if (error) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="text-red-600">{error}</div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
+      <input
+        type="file"
+        accept="image/*"
+        className="hidden"
+        ref={fileInputRef}
+        onChange={handleImageUpload}
+      />
+
       <DndContext
         sensors={sensors}
         collisionDetection={closestCenter}
@@ -391,20 +416,10 @@ export default function FormBlog() {
 
       <div className="flex justify-end gap-4 mt-8">
         <button
-          onClick={handleDraft}
-          disabled={isSavingDraft}
-          className={`px-4 py-2 text-gray-600 border border-gray-300 rounded-lg ${
-            isSavingDraft ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-50"
-          }`}
+          onClick={() => navigate(`/blog/${id}`)}
+          className="px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50"
         >
-          {isSavingDraft ? (
-            <span className="flex items-center gap-2">
-              <div className="w-4 h-4 border-2 border-gray-600 border-t-transparent rounded-full animate-spin" />
-              Saving...
-            </span>
-          ) : (
-            "Save as Draft"
-          )}
+          Cancel
         </button>
         <button
           onClick={handleSubmit}
@@ -418,10 +433,10 @@ export default function FormBlog() {
           {isSubmitting ? (
             <span className="flex items-center gap-2">
               <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-              Publishing...
+              Updating...
             </span>
           ) : (
-            "Publish"
+            "Update Blog"
           )}
         </button>
       </div>
