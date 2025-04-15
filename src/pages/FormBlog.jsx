@@ -26,6 +26,7 @@ import {
 import { createBlog } from "../config/Api";
 import { useNavigate } from "react-router-dom";
 
+// Update the SortableBlock component
 const SortableBlock = ({ block, index, ...props }) => {
   const {
     attributes,
@@ -34,12 +35,17 @@ const SortableBlock = ({ block, index, ...props }) => {
     transform,
     transition,
     isDragging,
-  } = useSortable({ id: block.id });
+  } = useSortable({
+    id: block.id,
+    disabled: block.type === "title",
+  });
 
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.5 : 1,
+    touchAction: "none",
+    userSelect: "none",
   };
 
   return (
@@ -48,14 +54,17 @@ const SortableBlock = ({ block, index, ...props }) => {
         <div className="flex items-start gap-4 group">
           {block.type !== "title" && (
             <button
-              className="mt-3 cursor-grab opacity-0 group-hover:opacity-100 transition-opacity"
+              className="mt-3 cursor-grab opacity-100 md:group-hover:opacity-100 transition-opacity p-3 rounded touch-manipulation"
               {...attributes}
               {...listeners}
+              onTouchStart={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+              }}
             >
-              <FaGripVertical className="text-gray-400" />
+              <FaGripVertical className="text-gray-400 text-xl" />
             </button>
           )}
-
           {props.children}
         </div>
       </div>
@@ -113,10 +122,11 @@ export default function FormBlog() {
     );
   };
 
+  // Update the sensors configuration
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        delay: 250,
+        distance: 5, // Reduced distance threshold
         tolerance: 5,
       },
     }),
