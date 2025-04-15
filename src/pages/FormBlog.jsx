@@ -26,7 +26,7 @@ import {
 import { createBlog } from "../config/Api";
 import { useNavigate } from "react-router-dom";
 
-// Update the SortableBlock component
+// Update the SortableBlock drag handle
 const SortableBlock = ({ block, index, ...props }) => {
   const {
     attributes,
@@ -37,15 +37,14 @@ const SortableBlock = ({ block, index, ...props }) => {
     isDragging,
   } = useSortable({
     id: block.id,
-    disabled: block.type === "title",
+    disabled: block.type === "title", // Prevent title from being dragged
   });
 
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.5 : 1,
-    touchAction: "none",
-    userSelect: "none",
+    touchAction: "none", // Important for mobile drag
   };
 
   return (
@@ -54,13 +53,9 @@ const SortableBlock = ({ block, index, ...props }) => {
         <div className="flex items-start gap-4 group">
           {block.type !== "title" && (
             <button
-              className="mt-3 cursor-grab opacity-100 md:group-hover:opacity-100 transition-opacity p-3 rounded touch-manipulation"
+              className="mt-3 cursor-grab opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity p-3 hover:bg-gray-100 rounded-lg touch-none"
               {...attributes}
               {...listeners}
-              onTouchStart={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-              }}
             >
               <FaGripVertical className="text-gray-400 text-xl" />
             </button>
@@ -126,8 +121,9 @@ export default function FormBlog() {
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 5, // Reduced distance threshold
-        tolerance: 5,
+        distance: 8, // Distance in pixels before drag starts
+        delay: 100, // Reduced delay for better responsiveness
+        tolerance: 10, // Increased tolerance for touch
       },
     }),
     useSensor(KeyboardSensor, {
