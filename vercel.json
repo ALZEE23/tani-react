@@ -2,47 +2,5 @@
   
   "rewrites": [
     { "source": "/(.*)", "destination": "/" }
-  ],
-  "routes": [
-    {
-      "src": "/",
-      "dest": "/"
-    },
-    {
-      "src": "/blog",
-      "dest": "/"
-    },
-    {
-      "src": "/login",
-      "dest": "/"
-    },
-    {
-      "src": "/formblog",
-      "dest": "/"
-    },
-    {
-      "src": "/formblog/:id",
-      "dest": "/"
-    },
-    {
-      "src": "/bookmark",
-      "dest": "/"
-    },
-    {
-      "src":"/register",
-      "dest": "/"
-    },
-    {
-      "src":"/blog/:id",
-      "dest": "/"
-    },
-    {
-      "src":"/myblog",
-      "dest": "/"
-    },
-    {
-      "src":"/edit-blog/:id",
-      "dest": "/"
-    }
   ]
 }
